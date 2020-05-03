@@ -3,6 +3,7 @@ using A2BillingService.Data;
 using A2BillingService.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Timers;
 
 namespace A2BillingConsole
 {
@@ -28,7 +29,8 @@ namespace A2BillingConsole
                     Console.WriteLine("-- 5. Generate and md5secret for all SIP Accounts                   --");
                     Console.WriteLine("-- 6. Generate and md5secret in sip_additional.conf                 --");
                     Console.WriteLine("-- 7. Import transport TCP to SIP Account                           --");
-                    Console.WriteLine("-- 8. Exit                                                          --");
+                    Console.WriteLine("-- 8. Set timer to auto update md5secret account                    --");
+                    Console.WriteLine("-- 9. Exit                                                          --");
                     Console.WriteLine("----------------------------------------------------------------------");
                     Console.Write("Please choose your option: ");
                     var input = Console.ReadLine();
@@ -96,6 +98,18 @@ namespace A2BillingConsole
                                 Console.WriteLine(a2billingExec);
                                 Console.WriteLine("----------------------------------------------------------------------");
                                 break;
+                            case 8:
+                                Console.WriteLine("-- Set timer to auto update md5secret account                       --");
+                                var serviceRootConfig = new ServiceRootConfig();
+                                var timeInterval = serviceRootConfig.TimerConfig().TimeLoop;
+                                Console.WriteLine("Timer interval = " + timeInterval);
+                                Timer timer = new Timer();
+                                timer.Elapsed += new ElapsedEventHandler(OnTimerEvent);
+                                timer.Interval = timeInterval;
+                                timer.Enabled = true;
+                                if (Console.Read() == 'q') { timer.Dispose(); } ;
+                                Console.WriteLine("----------------------------------------------------------------------");
+                                break;
                         }
                     }catch (Exception ex)
                     {
@@ -112,6 +126,16 @@ namespace A2BillingConsole
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+        private static void OnTimerEvent(object source, ElapsedEventArgs e)
+        {
+            var service = new CcSipBuddiesService();
+            var allUserResult = service.GenerateMD5SecretForAllAccounts();
+            foreach (var account in allUserResult)
+            {
+                Console.WriteLine(service.ToString(account));
+            }
+            Console.WriteLine("Press \'q\' to quit the sample.");
         }
     }
 }

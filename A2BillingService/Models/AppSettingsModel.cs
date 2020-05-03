@@ -17,4 +17,8 @@ namespace A2BillingService.Models
     {
         public string Dir { get; set; } = null;
     }
+    public class TimerLoopConfig
+    {
+        public int TimeLoop { get; set; } = 60000;
+    }
 }

@@ -30,5 +30,12 @@ namespace A2BillingService
             var config = builder.Build();
             return config.GetSection("A2BillingSipAdditionConf").Get<A2BillingSipAdditionConf>();
         }
+        public TimerLoopConfig TimerConfig()
+        {
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            var config = builder.Build();
+            return config.GetSection("TimerConfig").Get<TimerLoopConfig>();
+        }
     }
 }
