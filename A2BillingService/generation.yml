@@ -1,0 +1,86 @@
+project:
+  namespace: 'A2BillingService'
+  directory: .\A2BillingService
+database:
+  name: 
+  provider: MySQL
+  connectionString: 'server=192.168.233.156;port=3306;user=root;password=tel4vn;database=mya2billing'
+  userSecretsId: 1284bd42-4725-4c23-b027-9b2a43d81e79
+  tableNaming: Singular
+  tables: 
+  schemas: 
+data:
+  context:
+    name: '{Database.Name}Context'
+    baseClass: DbContext
+    propertyNaming: Plural
+    namespace: '{Project.Namespace}.Data'
+    directory: '{Project.Directory}\Data'
+    document: false
+  entity:
+    baseClass: 
+    entityNaming: Singular
+    relationshipNaming: Plural
+    prefixWithSchemaName: false
+    namespace: '{Project.Namespace}.Data.Entities'
+    directory: '{Project.Directory}\Data\Entities'
+    document: false
+  mapping:
+    namespace: '{Project.Namespace}.Data.Mapping'
+    directory: '{Project.Directory}\Data\Mapping'
+    document: false
+  query:
+    generate: true
+    indexPrefix: By
+    uniquePrefix: GetBy
+    namespace: '{Project.Namespace}.Data.Queries'
+    directory: '{Project.Directory}\Data\Queries'
+    document: false
+model:
+  shared:
+    namespace: '{Project.Namespace}.Domain.Models'
+    directory: '{Project.Directory}\Domain\Models'
+    include: 
+    exclude: 
+  read:
+    generate: true
+    name: '{Entity.Name}ReadModel'
+    baseClass: 
+    include: 
+    exclude: 
+    namespace: 
+    directory: 
+    document: false
+  create:
+    generate: true
+    name: '{Entity.Name}CreateModel'
+    baseClass: 
+    include: 
+    exclude: 
+    namespace: 
+    directory: 
+    document: false
+  update:
+    generate: true
+    name: '{Entity.Name}UpdateModel'
+    baseClass: 
+    include: 
+    exclude: 
+    namespace: 
+    directory: 
+    document: false
+  mapper:
+    generate: true
+    name: '{Entity.Name}Profile'
+    baseClass: AutoMapper.Profile
+    namespace: '{Project.Namespace}.Domain.Mapping'
+    directory: '{Project.Directory}\Domain\Mapping'
+    document: false
+  validator:
+    generate: true
+    name: '{Model.Name}Validator'
+    baseClass: AbstractValidator<{Model.Name}>
+    namespace: '{Project.Namespace}.Domain.Validation'
+    directory: '{Project.Directory}\Domain\Validation'
+    document: false
+script: 
