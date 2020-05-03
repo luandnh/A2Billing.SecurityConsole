@@ -23,5 +23,12 @@ namespace A2BillingService
             var config = builder.Build();
             return config.GetSection("SipAdditionConf").Get<SIPAdditionSettingModel>();
         }
+        public A2BillingSipAdditionConf A2BillingSipAdditionConfig()
+        {
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            var config = builder.Build();
+            return config.GetSection("A2BillingSipAdditionConf").Get<A2BillingSipAdditionConf>();
+        }
     }
 }

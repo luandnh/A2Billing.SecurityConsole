@@ -13,4 +13,8 @@ namespace A2BillingService.Models
     {
         public string Dir { get; set; } = null;
     }
+    public class A2BillingSipAdditionConf
+    {
+        public string Dir { get; set; } = null;
+    }
 }

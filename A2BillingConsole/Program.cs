@@ -16,6 +16,7 @@ namespace A2BillingConsole
                 var c = Console.ReadKey().Key;
                 var service = new CcSipBuddiesService();
                 var sipAdditionalservice = new SipAdditionService();
+                var sipA2Billingservice = new A2BillingSIPService();
                 do
                 {
                     Console.WriteLine("----------------------------------------------------------------------");
@@ -26,7 +27,7 @@ namespace A2BillingConsole
                     Console.WriteLine("-- 5. Generate and md5secret for all SIP Accounts                   --");
                     Console.WriteLine("-- 5. Generate and md5secret for all SIP Accounts                   --");
                     Console.WriteLine("-- 6. Generate and md5secret in sip_additional.conf                 --");
-                    Console.WriteLine("-- 7. Generate and md5secret for all SIP Accounts                   --");
+                    Console.WriteLine("-- 7. Import transport TCP to SIP Account                           --");
                     Console.WriteLine("-- 8. Exit                                                          --");
                     Console.WriteLine("----------------------------------------------------------------------");
                     Console.Write("Please choose your option: ");
@@ -87,6 +88,12 @@ namespace A2BillingConsole
                                 Console.WriteLine("-- Generate and md5secret in sip_additional.conf                    --");
                                 var fileLine = sipAdditionalservice.ReadAndExec();
                                 Console.WriteLine(fileLine);
+                                Console.WriteLine("----------------------------------------------------------------------");
+                                break;
+                            case 7:
+                                Console.WriteLine("-- Import transport TCP to SIP Account                              --");
+                                var a2billingExec = sipA2Billingservice.ReadAndExec();
+                                Console.WriteLine(a2billingExec);
                                 Console.WriteLine("----------------------------------------------------------------------");
                                 break;
                         }
