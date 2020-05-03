@@ -26,7 +26,6 @@ namespace A2BillingConsole
                     Console.WriteLine("-- 3. Generate md5secret from string                                --");
                     Console.WriteLine("-- 4. Generate and md5secret for SIP Account                        --");
                     Console.WriteLine("-- 5. Generate and md5secret for all SIP Accounts                   --");
-                    Console.WriteLine("-- 5. Generate and md5secret for all SIP Accounts                   --");
                     Console.WriteLine("-- 6. Generate and md5secret in sip_additional.conf                 --");
                     Console.WriteLine("-- 7. Import transport TCP to SIP Account                           --");
                     Console.WriteLine("-- 8. Set timer to auto update md5secret account                    --");
