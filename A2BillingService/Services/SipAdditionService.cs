@@ -43,7 +43,7 @@ namespace A2BillingService.Services
                 for (int i = 0; i < files.Length; i++)
                 {
                     var line = files[i];
-                    string extensionPattern = @"^(\[?\d{4}\]?)";
+                    string extensionPattern = @"^(\[\d{4}\])";
                     Match m = Regex.Match(line, extensionPattern, RegexOptions.IgnoreCase);
                     if (m.Success)
                     {
@@ -53,7 +53,7 @@ namespace A2BillingService.Services
                         {
                             var lineExten = files[j];
                             Match mExten = Regex.Match(lineExten, extensionPattern, RegexOptions.IgnoreCase);
-                            if (mExten.Success) break;
+                            if (mExten.Success || lineExten.Contains("tel4vntrunkout")) break;
                             string secretPattern = @"^(secret=[0-9a-zA-Z])";
                             Match secretMatch = Regex.Match(lineExten, secretPattern, RegexOptions.IgnoreCase);
                             if (secretMatch.Success)
@@ -67,7 +67,14 @@ namespace A2BillingService.Services
                                 fileUpdate.Add(lineExten);
                             }
                         }
-                    }
+                    }else if (line.Contains("tel4vntrunkout"))
+                    {
+                        fileUpdate.Add(line);
+                        for (int j = i + 1; j < files.Length; j++)
+                        {
+                            fileUpdate.Add(files[j]);
+                        }
+                        }
 
                 }
                 File.WriteAllLines(fileDir, fileUpdate.ToArray());
