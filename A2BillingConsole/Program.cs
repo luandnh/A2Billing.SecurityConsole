@@ -16,6 +16,7 @@ namespace A2BillingConsole
                 Console.WriteLine("Welcome to A2Billing Console. Press any key to continue!");
                 var c = Console.ReadKey().Key;
                 var service = new CcSipBuddiesService();
+                var cardService = new CcCardService();
                 var sipAdditionalservice = new SipAdditionService();
                 var sipA2Billingservice = new A2BillingSIPService();
                 do
@@ -26,10 +27,12 @@ namespace A2BillingConsole
                     Console.WriteLine("-- 3. Generate md5secret from string                                --");
                     Console.WriteLine("-- 4. Generate and md5secret for SIP Account                        --");
                     Console.WriteLine("-- 5. Generate and md5secret for all SIP Accounts                   --");
-                    Console.WriteLine("-- 6. Generate and md5secret in sip_additional.conf                 --");
-                    Console.WriteLine("-- 7. Import transport TCP to SIP Account                           --");
-                    Console.WriteLine("-- 8. Set timer to auto update md5secret account                    --");
-                    Console.WriteLine("-- 9. Exit                                                          --");
+                    Console.WriteLine("-- 6. Generate and md5password for Card                             --");
+                    Console.WriteLine("-- 7. Generate and md5password for all Cards                        --");
+                    Console.WriteLine("-- 8. Generate and md5secret in sip_additional.conf                 --");
+                    Console.WriteLine("-- 9. Import transport TCP to SIP Account                           --");
+                    Console.WriteLine("-- 10. Set timer to auto update md5secret and password card         --");
+                    Console.WriteLine("-- 11. Exit                                                         --");
                     Console.WriteLine("----------------------------------------------------------------------");
                     Console.Write("Please choose your option: ");
                     var input = Console.ReadLine();
@@ -37,7 +40,7 @@ namespace A2BillingConsole
                     try
                     {
                         int choice = Int32.Parse(input);
-                        if(choice < 1 || choice > 8)
+                        if(choice < 1 || choice > 11)
                         {
                             Console.WriteLine("Please select the correct option!");
                         }
@@ -61,7 +64,7 @@ namespace A2BillingConsole
                                 Console.WriteLine("----------------------------------------------------------------------");
                                 break;
                             case 3:
-                                Console.WriteLine("--    Generate md5secret from string                                --");
+                                Console.WriteLine("-- Generate md5secret from string                                   --");
                                 Console.Write("String : ");
                                 var stringGenerateInput = Console.ReadLine();
                                 var generateStringResult = service.GenerateMD5FromString(stringGenerateInput.Trim());
@@ -73,6 +76,11 @@ namespace A2BillingConsole
                                 Console.Write("Account Code : ");
                                 var accountGenerateInput = Console.ReadLine();
                                 var generateResult = service.GenerateMD5SecretForAccount(accountGenerateInput.Trim());
+                                if (generateResult == null)
+                                {
+                                    Console.WriteLine("Not found! Account Code is not exist!");
+                                    break;
+                                }
                                 Console.WriteLine(service.ToString(generateResult));
                                 Console.WriteLine("----------------------------------------------------------------------");
                                 break;
@@ -86,19 +94,41 @@ namespace A2BillingConsole
                                 Console.WriteLine("----------------------------------------------------------------------");
                                 break;
                             case 6:
+                                Console.WriteLine("-- Generate and md5password for Card                                --");
+                                Console.Write("Account Code : ");
+                                var accountCodeGeneratePassword = Console.ReadLine();
+                                var generatePasswordResult = cardService.GenerateMD5PasswordForAccount(accountCodeGeneratePassword.Trim());
+                                if (generatePasswordResult == null)
+                                {
+                                    Console.WriteLine("Not found! Account Code is not exist!");
+                                    break;
+                                }
+                                Console.WriteLine(cardService.ToString(generatePasswordResult));
+                                Console.WriteLine("----------------------------------------------------------------------");
+                                break;
+                            case 7:
+                                Console.WriteLine("-- Generate and md5password for all Cards                           --");
+                                var generatePasswordAllCard = cardService.GenerateMD5PasswordForAllAccounts();
+                                foreach (var account in generatePasswordAllCard)
+                                {
+                                    Console.WriteLine(cardService.ToString(account));
+                                }
+                                Console.WriteLine("----------------------------------------------------------------------");
+                                break;
+                            case 8:
                                 Console.WriteLine("-- Generate and md5secret in sip_additional.conf                    --");
                                 var fileLine = sipAdditionalservice.ReadAndExec();
                                 Console.WriteLine(fileLine);
                                 Console.WriteLine("----------------------------------------------------------------------");
                                 break;
-                            case 7:
+                            case 9:
                                 Console.WriteLine("-- Import transport TCP to SIP Account                              --");
                                 var a2billingExec = sipA2Billingservice.ReadAndExec();
                                 Console.WriteLine(a2billingExec);
                                 Console.WriteLine("----------------------------------------------------------------------");
                                 break;
-                            case 8:
-                                Console.WriteLine("-- Set timer to auto update md5secret account                       --");
+                            case 10:
+                                Console.WriteLine("-- Set timer to auto update md5secret and password card             --");
                                 var serviceRootConfig = new ServiceRootConfig();
                                 var timeInterval = serviceRootConfig.TimerConfig().TimeLoop;
                                 Console.WriteLine("Timer interval = " + timeInterval);
@@ -129,10 +159,18 @@ namespace A2BillingConsole
         private static void OnTimerEvent(object source, ElapsedEventArgs e)
         {
             var service = new CcSipBuddiesService();
+            Console.WriteLine("-- Generate and md5secret for all SIP Accounts                      --");
             var allUserResult = service.GenerateMD5SecretForAllAccounts();
             foreach (var account in allUserResult)
             {
                 Console.WriteLine(service.ToString(account));
+            }
+            Console.WriteLine("-- Generate and md5password for all Cards                           --");
+            var cardService = new CcCardService();
+            var generatePasswordAllCard = cardService.GenerateMD5PasswordForAllAccounts();
+            foreach (var account in generatePasswordAllCard)
+            {
+                Console.WriteLine(cardService.ToString(account));
             }
             Console.WriteLine("Press \'q\' to quit the sample.");
         }
