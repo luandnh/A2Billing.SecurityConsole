@@ -47,7 +47,7 @@ namespace A2BillingService.Services
                 var user = context.Set<CcCard>().FirstOrDefault(p => p.Username == accountNumber);
                 if (user == null) return null;
                 var checkPass = Regex.IsMatch(user.Uipass, "^[0-9a-fA-F]{32}$", RegexOptions.Compiled);
-                if (checkPass)
+                if (checkPass || user.Status != 1)
                     return user;
                 string passwordGenerated = GenerateMD5FromString(user.Username + ":a2billing:" + user.Uipass);
                 user.Uipass = passwordGenerated;
@@ -65,7 +65,7 @@ namespace A2BillingService.Services
                 foreach (var user in users)
                 {
                     var checkPass = Regex.IsMatch(user.Uipass, "^[0-9a-fA-F]{32}$", RegexOptions.Compiled);
-                    if (checkPass)
+                    if (checkPass || user.Status != 1)
                         continue;
                     string passwordGenerated = GenerateMD5FromString(user.Username + ":a2billing:" + user.Uipass);
                     user.Uipass = passwordGenerated;
